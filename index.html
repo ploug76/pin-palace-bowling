@@ -334,7 +334,7 @@ addEventListener('keydown',e=>{A();if(e.code=='KeyP'||e.code=='Escape'){togglePa
  if(e.code=='Space')doThrow(5.5+keyAim.pow*4,keyAim.ang,keyAim.spin)});
 function togglePause(){if(state=='title'||state=='over')return;paused=!paused;$('pause').textContent=paused?'▶':'⏸'}
 $('pause').onclick=e=>{e.stopPropagation();togglePause()};window.musicPaused=()=>paused;
-$('help').onclick=e=>{e.stopPropagation();panel('<h2>🎳 Pin Palace Bowling</h2><p><b>Move:</b> drag left/right to pick your starting board.<br><b>Bowl:</b> swipe UP. A faster swipe = more speed. <b>Curve</b> your swipe (like a banana) to put hook on the ball — it skids through the oil, then hooks hard on the dry back end of the lane.</p><p><b>Lane condition</b> changes where the oil ends: Dry lanes hook early, Heavy oil skids straight. Heavier balls carry more pins but are slower and deflect less.</p><p>Aim for the <b>pocket</b> (between the 1 and 3 pins for righties, 1 and 2 for lefties) for strikes. Standard 10-frame scoring — strikes, spares and the bonus balls in the 10th frame. Up to 4 bowlers pass the phone, plus an optional CPU bowler.</p><p>⌨️ ←/→ move, A/D aim, Q/E hook, W/S power, Space bowl, P pause.</p>')};
+$('help').onclick=e=>{e.stopPropagation();panel('<h2>🎳 Pin Palace Bowling</h2><p><b>Move:</b> drag left/right to pick your starting board.<br><b>Bowl:</b> swipe UP. A faster swipe = more speed. <b>Curve</b> your swipe (like a banana) to put hook on the ball — it skids through the oil, then hooks hard on the dry back end of the lane.</p><p><b>Lane condition</b> changes where the oil ends: Dry lanes hook early, Heavy oil skids straight. Heavier balls carry more pins but are slower and deflect less.</p><p>Aim for the <b>pocket</b> (between the 1 and 3 pins for righties, 1 and 2 for lefties) for strikes. Standard 10-frame scoring — strikes, spares and the bonus balls in the 10th frame. Up to 4 bowlers pass the phone, plus an optional CPU bowler.</p><p>⌨️ ←/→ move, A/D aim, Q/E hook, W/S power, Space bowl, P pause.</p><h3 class="gp-help">🎮 Controller</h3><p class="gp-help">◀ ▶ moves, LB / RB aim, LT / RT (or X / B) add hook, ▲ ▼ power, A bowls. On the title A picks options and Start begins. Start pauses, Select mutes.</p>')};
 // ======================= LOOP =======================
 let lastT=0;function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-lastT)/1000||0);lastT=now;if(!paused&&!panelOpen){for(let k=0;k<TS;k++){tNow+=dt;update(dt)}}render()}
 function update(dt){
@@ -638,4 +638,19 @@ window.__unlock={unlocked:un,sample:window.__SAMPLE||null,get badge(){return las
 #palbList li{min-height:30px;height:auto!important;font-size:16px!important}
 .tb{width:46px!important;height:46px!important}#mute{right:55px!important}#help{right:104px!important}
 </style>
+<!-- gamepad:start -->
+<script src="gamepad.js?v=1"></script>
+<script>
+GamepadSupport.init({
+ keys:{left:'ArrowLeft',right:'ArrowRight',up:'KeyW',down:'KeyS',lb:'KeyA',rb:'KeyD',lt:'KeyQ',rt:'KeyE',x:'KeyQ',b:'KeyE',a:'Space',
+  start:function(p){GamepadSupport.key((state==='title'||state==='over')?'Enter':'KeyP',p)},back:function(p){if(p)document.getElementById('mute').click()}},
+ menuKeys:{x:'Enter'},
+ noRepeat:['a','start','back'],
+ ignoreSel:'#dock,#mute,#pause,#help,#inst,#ios,.tb,#dockHint',
+ backSel:'#pclose',
+ menu:function(){return !!document.querySelector('#palbOv.on,#smpLock.on')||panelOpen||state==='title'||state==='over'||paused;},
+ items:GamepadSupport.list(function(){return (document.querySelector('#palbOv.on,#smpLock.on')||panelOpen||(state!=='title'&&state!=='over'))?[]:BTN;})
+});
+</script>
+<!-- gamepad:end -->
 </body></html>
